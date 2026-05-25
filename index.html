@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kegel S2">
+<meta name="theme-color" content="#E8A898">
+<title>Kegel Workbook — Semana 2</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #E8A898;
+    --rose-light: #F5D5CC;
+    --rose-pale: #FAF0EC;
+    --rose-dark: #B07060;
+    --rose-deep: #7A4035;
+    --cream: #FBF7F5;
+    --text: #3A2820;
+    --text-muted: #9A7060;
+    --white: #FFFFFF;
+    --success: #7AAA8A;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex-direction: column; min-height: 100dvh; }
+  .screen.active { display: flex; }
+
+  /* ── HOME ── */
+  #home {
+    background: linear-gradient(160deg, #E8A898 0%, #F5D5CC 45%, #FBF7F5 100%);
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px calc(40px + var(--safe-bottom));
+    padding-top: calc(var(--safe-top) + 40px);
+    text-align: center;
+  }
+
+  #home::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  #home::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  .home-ornament {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+
+  .home-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--rose-deep);
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
+
+  .home-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--rose-dark);
+    margin-bottom: 48px;
+  }
+
+  .pelvis-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 48px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.8);
+  }
+
+  .pelvis-icon svg { width: 64px; height: 64px; opacity: 0.7; }
+
+  .exercise-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .ex-btn {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+
+  .ex-btn:active { transform: scale(0.98); background: rgba(255,255,255,0.9); }
+
+  .ex-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--rose);
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ex-info { flex: 1; }
+  .ex-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .ex-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .ex-arrow { color: var(--rose-dark); font-size: 18px; }
+
+  .home-footer {
+    font-size: 11px;
+    color: var(--rose-dark);
+    opacity: 0.6;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── EXERCISE SCREEN ── */
+  #exercise {
+    background: var(--cream);
+    flex-direction: column;
+  }
+
+  .ex-header {
+    background: var(--rose);
+    padding: calc(var(--safe-top) + 16px) 20px 20px;
+    color: white;
+    position: relative;
+  }
+
+  .ex-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ex-header-badge {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .ex-header-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .ex-header-name {
+    font-size: 13px;
+    opacity: 0.85;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .dot {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.3);
+    flex: 1;
+    transition: background 0.3s;
+  }
+  .dot.done { background: white; }
+  .dot.active { background: rgba(255,255,255,0.7); }
+
+  /* ── CONTENT AREA ── */
+  .ex-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 20px;
+    padding-bottom: calc(20px + var(--safe-bottom));
+  }
+
+  /* ── POSITION CARD ── */
+  .position-card {
+    background: var(--rose-light);
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .position-icon {
+    width: 48px; height: 48px;
+    background: var(--rose);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .position-icon svg { width: 26px; height: 26px; stroke: white; }
+
+  .position-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; }
+  .position-value { font-size: 16px; font-weight: 500; color: var(--text); }
+
+  /* ── CHART VISUALIZATION ── */
+  .chart-section {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--rose-light);
+  }
+
+  .chart-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+
+  .chart-wrap { position: relative; }
+
+  .chart-svg { width: 100%; height: 100px; overflow: visible; }
+
+  .chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* ── STEPS ── */
+  .steps-section { margin-bottom: 20px; }
+  .steps-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+
+  .step-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--rose-pale);
+    border: 2px solid var(--rose-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--rose-dark);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text { font-size: 14px; line-height: 1.5; color: var(--text); padding-top: 4px; }
+  .step-highlight { color: var(--rose-dark); font-weight: 500; }
+
+  /* ── TIMER ── */
+  .timer-section {
+    background: white;
+    border-radius: 24px;
+    padding: 28px 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--rose-light);
+    text-align: center;
+  }
+
+  .timer-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+
+  .timer-ring-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px;
+  }
+
+  .timer-ring-svg { width: 160px; height: 160px; transform: rotate(-90deg); }
+
+  .timer-ring-bg {
+    fill: none;
+    stroke: var(--rose-pale);
+    stroke-width: 8;
+  }
+
+  .timer-ring-fill {
+    fill: none;
+    stroke: var(--rose);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s linear;
+  }
+
+  .timer-display {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .timer-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1;
+    display: block;
+  }
+
+  .timer-phase { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .rep-counter {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .rep-counter span { color: var(--rose-dark); font-weight: 500; font-size: 18px; }
+
+  .rep-dots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .rep-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--rose-pale);
+    border: 1.5px solid var(--rose-light);
+    transition: all 0.3s;
+  }
+  .rep-dot.done { background: var(--rose); border-color: var(--rose); }
+  .rep-dot.active { background: var(--rose-light); border-color: var(--rose); transform: scale(1.2); }
+
+  .start-btn {
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px 40px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    width: 100%;
+    max-width: 280px;
+  }
+  .start-btn:active { transform: scale(0.97); background: var(--rose-dark); }
+  .start-btn.pause { background: var(--rose-pale); color: var(--rose-dark); border: 1px solid var(--rose-light); }
+
+  /* ── TIPS ── */
+  .tip-card {
+    background: var(--rose-pale);
+    border-radius: 16px;
+    padding: 16px 18px;
+    border-left: 3px solid var(--rose);
+    margin-bottom: 16px;
+  }
+
+  .tip-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--rose-dark); margin-bottom: 6px; }
+  .tip-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+
+  /* ── COMPLETE SCREEN ── */
+  #complete {
+    background: linear-gradient(160deg, #E8A898 0%, #F5D5CC 60%, #FBF7F5 100%);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    padding-top: calc(var(--safe-top) + 40px);
+    padding-bottom: calc(var(--safe-bottom) + 40px);
+  }
+
+  .complete-icon {
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    border: 1px solid rgba(255,255,255,0.9);
+    font-size: 44px;
+  }
+
+  .complete-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--rose-deep);
+    margin-bottom: 8px;
+  }
+
+  .complete-sub {
+    font-size: 14px;
+    color: var(--rose-dark);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .complete-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.6);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.8);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--rose-deep);
+    display: block;
+  }
+  .stat-label { font-size: 11px; color: var(--rose-dark); letter-spacing: 1px; text-transform: uppercase; }
+
+  .home-btn {
+    background: var(--rose-deep);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px 40px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+  }
+  .home-btn:active { transform: scale(0.97); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: rotate(-90deg) scale(1); }
+    50% { transform: rotate(-90deg) scale(1.02); }
+    100% { transform: rotate(-90deg) scale(1); }
+  }
+
+  .timer-ring-svg.contracting { animation: pulse-ring 1s ease-in-out infinite; }
+
+  .screen.active > * { animation: fadeUp 0.4s ease both; }
+
+  /* ── PHASE INDICATOR ── */
+  .phase-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .phase-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--rose-pale);
+    color: var(--text-muted);
+    border: 1px solid var(--rose-light);
+    transition: all 0.3s;
+  }
+
+  .phase-chip.active {
+    background: var(--rose);
+    color: white;
+    border-color: var(--rose);
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="screen active">
+  <div class="home-ornament">✦ Fisio Alicia Quiñones ✦</div>
+  <div class="pelvis-icon">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="32" cy="38" rx="22" ry="14" stroke="#B07060" stroke-width="1.5"/>
+      <path d="M14 32 Q8 20 18 14 Q24 10 32 12 Q40 10 46 14 Q56 20 50 32" stroke="#B07060" stroke-width="1.5" fill="none"/>
+      <path d="M20 38 Q22 44 26 46" stroke="#B07060" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M44 38 Q42 44 38 46" stroke="#B07060" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="32" cy="28" r="4" stroke="#B07060" stroke-width="1.2" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="home-title">Kegel<br>Workbook</div>
+  <div class="home-subtitle">Semana Dos</div>
+
+  <div class="exercise-list">
+    <button class="ex-btn" onclick="startExercise(0)">
+      <div class="ex-num">1</div>
+      <div class="ex-info">
+        <div class="ex-name">Escalera de Bajada</div>
+        <div class="ex-meta">Sentada · 10 repeticiones · ~5 min</div>
+      </div>
+      <div class="ex-arrow">›</div>
+    </button>
+    <button class="ex-btn" onclick="startExercise(1)">
+      <div class="ex-num">2</div>
+      <div class="ex-info">
+        <div class="ex-name">Fase de Fuerza</div>
+        <div class="ex-meta">Sentada · 10 repeticiones · ~5 min</div>
+      </div>
+      <div class="ex-arrow">›</div>
+    </button>
+    <button class="ex-btn" onclick="startExercise(2)">
+      <div class="ex-num">3</div>
+      <div class="ex-info">
+        <div class="ex-name">Contracciones Rápidas</div>
+        <div class="ex-meta">Acostada · 10 repeticiones · ~3 min</div>
+      </div>
+      <div class="ex-arrow">›</div>
+    </button>
+    <button class="ex-btn" onclick="startExercise(3)">
+      <div class="ex-num">4</div>
+      <div class="ex-info">
+        <div class="ex-name">Valles y Montañas</div>
+        <div class="ex-meta">Acostada · 10 repeticiones · ~5 min</div>
+      </div>
+      <div class="ex-arrow">›</div>
+    </button>
+  </div>
+
+  <div class="home-footer">@fisio.aliciaquinones</div>
+</div>
+
+<!-- ══ EXERCISE ══ -->
+<div id="exercise" class="screen">
+  <div class="ex-header">
+    <div class="ex-header-top">
+      <button class="back-btn" onclick="goHome()">← Inicio</button>
+      <div class="ex-header-badge">Semana 2</div>
+    </div>
+    <div class="ex-header-num" id="ex-num">01</div>
+    <div class="ex-header-name" id="ex-name">Escalera de Bajada</div>
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+
+  <div class="ex-content" id="ex-content">
+    <!-- dynamically filled -->
+  </div>
+</div>
+
+<!-- ══ COMPLETE ══ -->
+<div id="complete" class="screen">
+  <div class="complete-icon">✓</div>
+  <div class="complete-title">¡Ejercicio<br>completado!</div>
+  <div class="complete-sub" id="complete-msg">Has terminado todas las repeticiones.<br>Descansa 1 minuto antes del siguiente.</div>
+
+  <div class="complete-stats">
+    <div class="stat-card">
+      <span class="stat-num" id="stat-reps">10</span>
+      <span class="stat-label">Repeticiones</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-time">5:00</span>
+      <span class="stat-label">Tiempo</span>
+    </div>
+  </div>
+
+  <button class="home-btn" onclick="goHome()">Volver al inicio</button>
+</div>
+
+<script>
+const exercises = [
+  {
+    id: 1,
+    name: "Escalera de Bajada",
+    position: "Sentada",
+    reps: 10,
+    description: "Contracción máxima al 100%, luego baja gradualmente al 50%. Como descender peldaños.",
+    steps: [
+      { text: "Contrae al <span class='step-highlight'>100%</span> máximo", duration: 5, phase: "contrae" },
+      { text: "Sostén 5 seg en máximo", duration: 5, phase: "sostén" },
+      { text: "Relaja al <span class='step-highlight'>50%</span> — media contracción", duration: 5, phase: "relaja" },
+      { text: "Descansa <span class='step-highlight'>10 seg</span> completos", duration: 10, phase: "descansa" }
+    ],
+    chart: "escalera",
+    tip: "NO contraer glúteos, muslos ni abdomen. No sostener la respiración. Al terminar las 10 repeticiones, descansa 1 minuto."
+  },
+  {
+    id: 2,
+    name: "Fase de Fuerza",
+    position: "Sentada",
+    reps: 10,
+    description: "Contracciones progresivas sostenidas por 6 segundos. Cada rep va más fuerte.",
+    steps: [
+      { text: "Contrae fuerte — sube la intensidad", duration: 6, phase: "contrae" },
+      { text: "Sostén 6 seg sin bajar", duration: 6, phase: "sostén" },
+      { text: "¡Contrae más fuerte todavía!", duration: 0, phase: "extra" },
+      { text: "Descansa <span class='step-highlight'>6 seg</span>", duration: 6, phase: "descansa" }
+    ],
+    chart: "fuerza",
+    tip: "NO contraer glúteos, muslos ni abdomen. No sostener la respiración. Al terminar las 10 repeticiones, descansa 1 minuto."
+  },
+  {
+    id: 3,
+    name: "Contracciones Rápidas",
+    position: "Acostada",
+    reps: 10,
+    description: "Contracciones máximas rápidas. Sin sostener — contrae y suelta inmediatamente.",
+    steps: [
+      { text: "Contracción <span class='step-highlight'>máxima rápida</span>", duration: 1, phase: "contrae" },
+      { text: "Suelta completamente", duration: 2, phase: "relaja" }
+    ],
+    chart: "rapidas",
+    tip: "NO contraer glúteos, muslos ni abdomen. No sostener la respiración. Al terminar las 10 repeticiones, descansa 1 minuto."
+  },
+  {
+    id: 4,
+    name: "Valles y Montañas",
+    position: "Acostada",
+    reps: 10,
+    description: "Alternar contracciones rápidas con contracciones sostenidas — picos y valles.",
+    steps: [
+      { text: "Contracción <span class='step-highlight'>máxima rápida</span>", duration: 1, phase: "contrae" },
+      { text: "Sostén <span class='step-highlight'>5 seg</span>", duration: 5, phase: "sostén" },
+      { text: "Relaja <span class='step-highlight'>5 seg</span>", duration: 5, phase: "relaja" },
+      { text: "Contracción <span class='step-highlight'>máxima rápida</span>", duration: 1, phase: "contrae" },
+      { text: "Relaja <span class='step-highlight'>5 seg</span>", duration: 5, phase: "relaja" }
+    ],
+    chart: "valles",
+    tip: "NO contraer glúteos, muslos ni abdomen. No sostener la respiración. Al terminar las 10 repeticiones, descansa 1 minuto."
+  }
+];
+
+let currentEx = 0;
+let currentRep = 0;
+let currentStep = 0;
+let timerInterval = null;
+let timerSec = 0;
+let timerMax = 5;
+let running = false;
+let totalSeconds = 0;
+let totalTimer = null;
+
+const CIRCUMFERENCE = 2 * Math.PI * 56; // r=56
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  clearAll();
+  showScreen('home');
+}
+
+function clearAll() {
+  clearInterval(timerInterval);
+  clearInterval(totalTimer);
+  running = false;
+  currentRep = 0;
+  currentStep = 0;
+  timerSec = 0;
+  totalSeconds = 0;
+}
+
+function startExercise(idx) {
+  clearAll();
+  currentEx = idx;
+  currentRep = 0;
+  currentStep = 0;
+  renderExercise();
+  showScreen('exercise');
+}
+
+function renderExercise() {
+  const ex = exercises[currentEx];
+  document.getElementById('ex-num').textContent = String(currentEx + 1).padStart(2, '0');
+  document.getElementById('ex-name').textContent = ex.name;
+
+  // Progress dots
+  const dots = document.getElementById('progress-dots');
+  dots.innerHTML = exercises.map((_, i) =>
+    `<div class="dot ${i < currentEx ? 'done' : i === currentEx ? 'active' : ''}"></div>`
+  ).join('');
+
+  document.getElementById('ex-content').innerHTML = buildExContent(ex);
+  initTimer(ex);
+}
+
+function buildChartSVG(type) {
+  const w = 280, h = 80;
+  let path = '';
+  let labels = [];
+
+  if (type === 'escalera') {
+    path = `M0,70 L30,70 L30,5 L80,5 L80,35 L130,35 L130,70 L160,70 L160,70`;
+    labels = ['0', '25', '50', '75', '100'];
+  } else if (type === 'fuerza') {
+    path = `M0,70 L20,70 L20,5 L90,5 L90,70 L110,70 L110,5 L180,5 L180,70`;
+    labels = ['0', '25', '50', '75', '100'];
+  } else if (type === 'rapidas') {
+    path = `M0,70 L30,70 L32,5 L34,70 L70,70 L72,5 L74,70 L110,70 L112,5 L114,70`;
+    labels = ['0', '25', '50', '75', '100'];
+  } else if (type === 'valles') {
+    path = `M0,70 L20,70 L22,5 L24,70 L60,70 L60,5 L90,5 L90,70 L130,70 L132,5 L134,70 L160,70 L160,70`;
+    labels = ['0', '25', '50', '75', '100'];
+  }
+
+  const yLabels = [100, 80, 60, 40, 20, 0].map((v, i) => {
+    const y = (i / 5) * (h - 10) + 5;
+    return `<text x="-4" y="${y}" text-anchor="end" font-size="8" fill="#9A7060" dy="3">${v}</text>`;
+  }).join('');
+
+  return `
+  <svg viewBox="0 0 ${w + 40} ${h + 20}" class="chart-svg" style="height:90px">
+    <defs>
+      <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E8A898" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#E8A898" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(32,5)">
+      ${[0,20,40,60,80,100].map(v => {
+        const y = (1 - v/100) * (h - 10) + 5;
+        return `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="#F5D5CC" stroke-width="0.5"/>`;
+      }).join('')}
+      ${yLabels}
+      <path d="${path} L160,${h} L0,${h} Z" fill="url(#fillGrad)"/>
+      <path d="${path}" stroke="#E8A898" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+    </g>
+  </svg>`;
+}
+
+function buildExContent(ex) {
+  const posIcon = ex.position === 'Sentada'
+    ? `<svg viewBox="0 0 26 26" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><circle cx="13" cy="5" r="3"/><path d="M10 9h6l2 7h-3v6h-4v-6H8z"/></svg>`
+    : `<svg viewBox="0 0 26 26" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="10" r="3"/><path d="M8 10h14M18 10v4M6 10v4"/></svg>`;
+
+  const repDots = Array.from({length: ex.reps}, (_, i) =>
+    `<div class="rep-dot ${i < currentRep ? 'done' : i === currentRep ? 'active' : ''}" id="rdot-${i}"></div>`
+  ).join('');
+
+  const stepsList = ex.steps.map((s, i) =>
+    `<div class="step-item">
+      <div class="step-dot">${i + 1}</div>
+      <div class="step-text">${s.text}</div>
+    </div>`
+  ).join('');
+
+  return `
+    <div class="position-card">
+      <div class="position-icon">${posIcon}</div>
+      <div>
+        <div class="position-label">Posición</div>
+        <div class="position-value">${ex.position}</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-title">Patrón de contracción</div>
+      ${buildChartSVG(ex.chart)}
+    </div>
+
+    <div class="timer-section">
+      <div class="timer-label">Temporizador</div>
+
+      <div class="phase-bar" id="phase-bar">
+        ${ex.steps.filter((s,i,a) => a.findIndex(t=>t.phase===s.phase)===i).map(s =>
+          `<div class="phase-chip ${s.phase === ex.steps[0].phase ? 'active' : ''}" id="chip-${s.phase}">${phaseLabel(s.phase)}</div>`
+        ).join('')}
+      </div>
+
+      <div class="timer-ring-wrap">
+        <svg class="timer-ring-svg" id="timer-svg" viewBox="0 0 120 120">
+          <circle class="timer-ring-bg" cx="60" cy="60" r="50"/>
+          <circle class="timer-ring-fill" id="ring-fill" cx="60" cy="60" r="50"
+            stroke-dasharray="${2 * Math.PI * 50}"
+            stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-display">
+          <span class="timer-num" id="timer-num">—</span>
+          <span class="timer-phase" id="timer-phase-lbl">listo</span>
+        </div>
+      </div>
+
+      <div class="rep-counter">Repetición <span id="rep-current">${currentRep + 1}</span> de ${ex.reps}</div>
+      <div class="rep-dots">${repDots}</div>
+
+      <button class="start-btn" id="start-btn" onclick="toggleTimer()">Comenzar</button>
+    </div>
+
+    <div class="steps-section">
+      <div class="steps-title">Secuencia</div>
+      ${stepsList}
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Recuerda</div>
+      <div class="tip-text">${ex.tip}</div>
+    </div>
+  `;
+}
+
+function phaseLabel(phase) {
+  return { contrae: 'Contrae', sostén: 'Sostén', relaja: 'Relaja', descansa: 'Descansa', extra: 'Más fuerte' }[phase] || phase;
+}
+
+function initTimer(ex) {
+  updateRingFill(0, 1);
+  document.getElementById('timer-num').textContent = '—';
+  document.getElementById('timer-phase-lbl').textContent = 'listo';
+}
+
+function toggleTimer() {
+  if (running) {
+    pauseTimer();
+  } else {
+    runTimer();
+  }
+}
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  clearInterval(totalTimer);
+  running = false;
+  const btn = document.getElementById('start-btn');
+  if (btn) { btn.textContent = 'Continuar'; btn.classList.remove('pause'); }
+}
+
+function runTimer() {
+  const ex = exercises[currentEx];
+  running = true;
+  const btn = document.getElementById('start-btn');
+  if (btn) { btn.textContent = 'Pausar'; btn.classList.add('pause'); }
+
+  if (!totalTimer) {
+    totalTimer = setInterval(() => { totalSeconds++; }, 1000);
+  } else {
+    clearInterval(totalTimer);
+    totalTimer = setInterval(() => { totalSeconds++; }, 1000);
+  }
+
+  runStep(ex, currentStep);
+}
+
+function runStep(ex, stepIdx) {
+  if (!running) return;
+  if (stepIdx >= ex.steps.length) {
+    currentRep++;
+    if (currentRep >= ex.reps) {
+      finishExercise();
+      return;
+    }
+    updateRepDots();
+    currentStep = 0;
+    runStep(ex, 0);
+    return;
+  }
+
+  const step = ex.steps[stepIdx];
+  currentStep = stepIdx;
+  updatePhaseChips(step.phase);
+
+  const phaseLbl = document.getElementById('timer-phase-lbl');
+  if (phaseLbl) phaseLbl.textContent = phaseLabel(step.phase);
+
+  if (step.duration === 0) {
+    // No timer — flash and advance
+    const numEl = document.getElementById('timer-num');
+    if (numEl) numEl.textContent = '!';
+    updateRingFill(1, 1);
+    setTimeout(() => { if (running) runStep(ex, stepIdx + 1); }, 600);
+    return;
+  }
+
+  timerSec = step.duration;
+  timerMax = step.duration;
+  updateTimerDisplay(timerSec, timerMax);
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!running) { clearInterval(timerInterval); return; }
+    timerSec--;
+    updateTimerDisplay(timerSec, timerMax);
+    if (timerSec <= 0) {
+      clearInterval(timerInterval);
+      runStep(ex, stepIdx + 1);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(sec, max) {
+  const numEl = document.getElementById('timer-num');
+  const ringEl = document.getElementById('ring-fill');
+  if (!numEl || !ringEl) return;
+  numEl.textContent = sec;
+  const progress = sec / max;
+  const circ = 2 * Math.PI * 50;
+  ringEl.style.strokeDashoffset = circ * (1 - progress);
+}
+
+function updateRingFill(progress, _max) {
+  const ringEl = document.getElementById('ring-fill');
+  if (!ringEl) return;
+  const circ = 2 * Math.PI * 50;
+  ringEl.style.strokeDashoffset = circ * (1 - progress);
+}
+
+function updatePhaseChips(activePhase) {
+  document.querySelectorAll('.phase-chip').forEach(c => c.classList.remove('active'));
+  const chip = document.getElementById('chip-' + activePhase);
+  if (chip) chip.classList.add('active');
+}
+
+function updateRepDots() {
+  const ex = exercises[currentEx];
+  for (let i = 0; i < ex.reps; i++) {
+    const d = document.getElementById('rdot-' + i);
+    if (!d) continue;
+    d.className = 'rep-dot' + (i < currentRep ? ' done' : i === currentRep ? ' active' : '');
+  }
+  const rc = document.getElementById('rep-current');
+  if (rc) rc.textContent = currentRep + 1;
+}
+
+function finishExercise() {
+  clearInterval(timerInterval);
+  clearInterval(totalTimer);
+  running = false;
+  const ex = exercises[currentEx];
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  document.getElementById('stat-reps').textContent = ex.reps;
+  document.getElementById('stat-time').textContent = `${mins}:${String(secs).padStart(2,'0')}`;
+  document.getElementById('complete-msg').textContent =
+    `Completaste "${ex.name}". Descansa 1 minuto antes del siguiente ejercicio.`;
+  showScreen('complete');
+}
+
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
